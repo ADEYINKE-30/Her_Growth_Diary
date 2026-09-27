@@ -1,0 +1,161 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --color-cream: #FBF8F5;
+  --color-cream-50: #FEFCFA;
+  --color-cream-100: #F5EFE8;
+
+  --color-blush-50: #FDF0F3;
+  --color-blush-100: #F8DDE4;
+  --color-blush-200: #F0BEC9;
+  --color-blush-300: #E8A4B0;
+  --color-blush-400: #D4788C;
+  --color-blush-500: #C05C74;
+
+  --color-lavender-50: #F4F1F8;
+  --color-lavender-100: #EDE7F6;
+  --color-lavender-200: #D8CCE8;
+  --color-lavender-300: #C4B5D4;
+  --color-lavender-400: #A891C0;
+
+  --color-mauve-200: #E5CDD8;
+  --color-mauve-300: #D4B5C8;
+  --color-mauve-400: #B89DB5;
+
+  --color-plum-900: #2A1A2E;
+  --color-plum-800: #3D2A3F;
+  --color-plum-700: #5C4A5E;
+  --color-plum-600: #7A6A7C;
+  --color-plum-400: #9B8A9E;
+  --color-plum-200: #D6CADB;
+  --color-plum-100: #EDE0E8;
+
+  --font-family-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-family-sans: 'DM Sans', system-ui, -apple-system, sans-serif;
+
+  --radius-card: 1.25rem;
+  --radius-pill: 9999px;
+}
+
+html {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  background-color: #FBF8F5;
+  color: #3D2A3F;
+  scroll-behavior: smooth;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-serif {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #EDE0E8;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #D4B5C8;
+}
+
+/* Subtle paper texture via repeating-linear-gradient */
+.paper-texture {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 27px,
+    rgba(184, 157, 181, 0.08) 28px
+  );
+}
+
+/* Scroll fade-in animation */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-up {
+  animation: fadeUp 0.7s ease forwards;
+}
+
+/* Card hover lift */
+.card-lift {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(61, 42, 63, 0.10);
+}
+
+/* Image zoom on hover */
+.img-zoom {
+  overflow: hidden;
+}
+.img-zoom img {
+  transition: transform 0.45s ease;
+}
+.img-zoom:hover img {
+  transform: scale(1.04);
+}
+
+/* Handwritten underline decoration */
+.handwritten-underline {
+  position: relative;
+  display: inline-block;
+}
+.handwritten-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #E8A4B0, #C4B5D4);
+  border-radius: 2px;
+}
+
+/* Focus styles */
+:focus-visible {
+  outline: 2px solid #E8A4B0;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Input styles */
+input[type="email"],
+input[type="text"],
+input[type="search"] {
+  background: #FEFCFA;
+  border: 1.5px solid #EDE0E8;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  color: #3D2A3F;
+  transition: border-color 0.2s ease;
+  width: 100%;
+}
+input[type="email"]:focus,
+input[type="text"]:focus,
+input[type="search"]:focus {
+  outline: none;
+  border-color: #E8A4B0;
+}
+input::placeholder {
+  color: #9B8A9E;
+}
