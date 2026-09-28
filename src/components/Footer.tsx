@@ -1,11 +1,12 @@
 import type { NavProps } from '../types'
+import { Link } from 'react-router-dom'
 
-export default function Footer({ navigate }: Pick<NavProps, 'navigate'>) {
+export default function Footer({}: Pick<NavProps, 'navigate'>) {
   const links = [
-    { label: 'Home', page: 'home' as const },
-    { label: 'About', page: 'about' as const },
-    { label: 'Diary', page: 'diary' as const },
-    { label: 'Resources', page: 'resources' as const },
+    { label: 'Home', path: '/' },
+    { label: 'About', path: '/about' },
+    { label: 'Diary', path: '/diary' },
+    { label: 'Resources', path: '/resources' },
   ]
 
   return (
@@ -81,8 +82,8 @@ export default function Footer({ navigate }: Pick<NavProps, 'navigate'>) {
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {links.map((link) => (
                 <li key={link.label}>
-                  <button
-                    onClick={() => navigate(link.page)}
+                  <Link
+                    to={link.path}
                     style={{
                       background: 'none',
                       border: 'none',
@@ -96,7 +97,7 @@ export default function Footer({ navigate }: Pick<NavProps, 'navigate'>) {
                     onMouseLeave={(e) => { (e.target as HTMLElement).style.color = '#B89DB5' }}
                   >
                     {link.label}
-                  </button>
+                  </Link>
                 </li>
               ))}
             </ul>

@@ -2,6 +2,7 @@
 /** @jsx React.createElement */
 // React is provided by the app runtime; keep this import for classic JSX and hooks.
 import React from 'react'
+import { Outlet, useLocation, useNavigate, useOutletContext, useParams } from 'react-router-dom'
 import type { Page } from './types'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
@@ -20,26 +21,62 @@ declare global {
 }
 
 export default function App() {
-  const [page, setPage] = React.useState<Page>('home')
-  const [selectedArticle, setSelectedArticle] = React.useState<string | null>(null)
+  const location = useLocation()
+  const routerNavigate = useNavigate()
+  const page = getPageFromPath(location.pathname)
 
   const navigate = (p: Page, article?: string) => {
-    setPage(p)
-    if (article !== undefined) setSelectedArticle(article)
+    const path = article !== undefined ? `/diary/${article}` : pagePaths[p]
+    routerNavigate(path)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#FBF8F5', fontFamily: "'DM Sans', system-ui, sans-serif" }}>
       <Navbar currentPage={page} navigate={navigate} />
-
-      {page === 'home' && <Home navigate={navigate} />}
-      {page === 'about' && <About navigate={navigate} />}
-      {page === 'diary' && <Diary navigate={navigate} />}
-      {page === 'article' && <Article navigate={navigate} article={selectedArticle} />}
-      {page === 'resources' && <Resources />}
-
+      <Outlet context={{ navigate }} />
       <Footer navigate={navigate} />
     </div>
   )
+}
+
+export function HomeRoute() {
+  return <Home navigate={useOutletNavigation()} />
+}
+
+export function AboutRoute() {
+  return <About navigate={useOutletNavigation()} />
+}
+
+export function DiaryRoute() {
+  return <Diary navigate={useOutletNavigation()} />
+}
+
+export function ArticleRoute() {
+  const { articleId } = useParams()
+  return <Article navigate={useOutletNavigation()} article={articleId ?? null} />
+}
+
+export function ResourcesRoute() {
+  return <Resources />
+}
+
+function useOutletNavigation() {
+  return useOutletContext<{ navigate: (page: Page, article?: string) => void }>().navigate
+}
+
+const pagePaths: Record<Page, string> = {
+  home: '/',
+  about: '/about',
+  diary: '/diary',
+  article: '/diary',
+  resources: '/resources',
+}
+
+function getPageFromPath(pathname: string): Page {
+  if (pathname === '/about') return 'about'
+  if (pathname === '/diary') return 'diary'
+  if (pathname.startsWith('/diary/')) return 'article'
+  if (pathname === '/resources') return 'resources'
+  return 'home'
 }

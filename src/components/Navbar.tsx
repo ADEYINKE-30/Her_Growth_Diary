@@ -1,15 +1,16 @@
 import { useState } from 'react'
+import { Link, NavLink } from 'react-router-dom'
 import type { NavProps } from '../types'
 
-export default function Navbar({ navigate, currentPage }: NavProps) {
+export default function Navbar({ currentPage }: NavProps) {
   const [menuOpen, setMenuOpen] = useState(false)
 
-  const links: { label: string; page: Parameters<NavProps['navigate']>[0] }[] = [
-    { label: 'Home', page: 'home' },
-    { label: 'About', page: 'about' },
-    { label: 'Diary', page: 'diary' },
-    { label: 'Topics', page: 'home' },
-    { label: 'Resources', page: 'resources' },
+  const links: { label: string; page: Parameters<NavProps['navigate']>[0]; path: string }[] = [
+    { label: 'Home', page: 'home', path: '/' },
+    { label: 'About', page: 'about', path: '/about' },
+    { label: 'Diary', page: 'diary', path: '/diary' },
+    { label: 'Topics', page: 'home', path: '/' },
+    { label: 'Resources', page: 'resources', path: '/resources' },
   ]
 
   return (
@@ -26,8 +27,8 @@ export default function Navbar({ navigate, currentPage }: NavProps) {
       <nav style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 2rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '68px' }}>
           {/* Logo */}
-          <button
-            onClick={() => navigate('home')}
+          <Link
+            to="/"
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -52,7 +53,7 @@ export default function Navbar({ navigate, currentPage }: NavProps) {
             >
               Her Growth Diary
             </span>
-          </button>
+          </Link>
 
           {/* Desktop nav */}
           <div
@@ -60,9 +61,9 @@ export default function Navbar({ navigate, currentPage }: NavProps) {
             className="hidden-mobile"
           >
             {links.map((link) => (
-              <button
+              <NavLink
                 key={link.label}
-                onClick={() => navigate(link.page)}
+                to={link.path}
                 style={{
                   background: 'none',
                   border: 'none',
@@ -82,7 +83,7 @@ export default function Navbar({ navigate, currentPage }: NavProps) {
                 }}
               >
                 {link.label}
-              </button>
+              </NavLink>
             ))}
           </div>
 
@@ -108,8 +109,8 @@ export default function Navbar({ navigate, currentPage }: NavProps) {
               </svg>
             </button>
 
-            <button
-              onClick={() => navigate('diary')}
+            <Link
+              to="/diary"
               style={{
                 backgroundColor: '#E8A4B0',
                 color: '#FEFCFA',
@@ -132,7 +133,7 @@ export default function Navbar({ navigate, currentPage }: NavProps) {
               }}
             >
               Start Reading
-            </button>
+            </Link>
           </div>
 
           {/* Mobile menu button */}
@@ -173,9 +174,10 @@ export default function Navbar({ navigate, currentPage }: NavProps) {
             }}
           >
             {links.map((link) => (
-              <button
+              <Link
                 key={link.label}
-                onClick={() => { navigate(link.page); setMenuOpen(false) }}
+                to={link.path}
+                onClick={() => setMenuOpen(false)}
                 style={{
                   background: 'none',
                   border: 'none',
@@ -189,10 +191,11 @@ export default function Navbar({ navigate, currentPage }: NavProps) {
                 }}
               >
                 {link.label}
-              </button>
+              </Link>
             ))}
-            <button
-              onClick={() => { navigate('diary'); setMenuOpen(false) }}
+            <Link
+              to="/diary"
+              onClick={() => setMenuOpen(false)}
               style={{
                 backgroundColor: '#E8A4B0',
                 color: '#FEFCFA',
@@ -207,7 +210,7 @@ export default function Navbar({ navigate, currentPage }: NavProps) {
               }}
             >
               Start Reading
-            </button>
+            </Link>
           </div>
         )}
       </nav>
