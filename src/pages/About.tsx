@@ -1,6 +1,6 @@
-import type { NavProps } from '../types'
+import type { Navigate } from '../types'
 
-export default function About({ navigate }: Pick<NavProps, 'navigate'>) {
+export default function About({ navigate }: { navigate: Navigate }) {
   const beliefs = [
     { icon: '🌿', title: 'You are not behind.', body: 'Life is not a race with a fixed finish line. Your journey is unfolding at exactly the pace it needs to.' },
     { icon: '💗', title: 'Small progress still counts.', body: 'Every tiny step you take — every difficult moment you walk through — is still movement. Still growth.' },

@@ -1,9 +1,5 @@
-/** @jsxRuntime classic */
-/** @jsx React.createElement */
-// React is provided by the app runtime; keep this import for classic JSX and hooks.
-import React from 'react'
 import { Outlet, useLocation, useNavigate, useOutletContext, useParams } from 'react-router-dom'
-import type { Page } from './types'
+import type { Navigate, Page } from './types'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Home from './pages/Home'
@@ -11,14 +7,6 @@ import About from './pages/About'
 import Diary from './pages/Diary'
 import Article from './pages/Article'
 import Resources from './pages/Resources'
-
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      [elementName: string]: any
-    }
-  }
-}
 
 export default function App() {
   const location = useLocation()
@@ -33,9 +21,9 @@ export default function App() {
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#FBF8F5', fontFamily: "'DM Sans', system-ui, sans-serif" }}>
-      <Navbar currentPage={page} navigate={navigate} />
+      <Navbar currentPage={page} />
       <Outlet context={{ navigate }} />
-      <Footer navigate={navigate} />
+      <Footer />
     </div>
   )
 }
@@ -62,7 +50,7 @@ export function ResourcesRoute() {
 }
 
 function useOutletNavigation() {
-  return useOutletContext<{ navigate: (page: Page, article?: string) => void }>().navigate
+  return useOutletContext<{ navigate: Navigate }>().navigate
 }
 
 const pagePaths: Record<Page, string> = {

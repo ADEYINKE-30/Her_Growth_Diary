@@ -1,4 +1,6 @@
-export const diaryEntries = [
+import type { DiaryEntry, ResourceCategory, Topic } from '../types'
+
+export const diaryEntries: DiaryEntry[] = [
   {
     id: 'not-falling-behind',
     category: 'Mindset',
@@ -106,7 +108,7 @@ Take your time. Choose yourself. Keep becoming.
   },
 ]
 
-export const topics = [
+export const topics: Topic[] = [
   {
     emoji: '🌱',
     name: 'Growth',
@@ -160,7 +162,7 @@ export const journalPrompts = [
   'Where have I been holding myself back?',
 ]
 
-export const resources = [
+export const resources: ResourceCategory[] = [
   {
     category: 'Journal Prompts',
     emoji: '📝',

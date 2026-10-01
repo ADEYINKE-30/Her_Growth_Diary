@@ -1,10 +1,10 @@
-import type { NavProps } from '../types'
+import type { Navigate } from '../types'
 import { diaryEntries } from '../data/content'
 
 export default function Article({
   navigate,
   article,
-}: Pick<NavProps, 'navigate'> & { article: string | null }) {
+}: { navigate: Navigate; article: string | null }) {
   const entry = diaryEntries.find((e) => e.id === article) ?? diaryEntries[0]
   const currentIndex = diaryEntries.findIndex((e) => e.id === entry.id)
   const prev = currentIndex > 0 ? diaryEntries[currentIndex - 1] : null
@@ -263,7 +263,12 @@ export default function Article({
                 onClick={() => navigate('article', r.id)}
                 role="button"
                 tabIndex={0}
-                onKeyDown={(e) => e.key === 'Enter' && navigate('article', r.id)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    navigate('article', r.id)
+                  }
+                }}
                 style={{
                   backgroundColor: '#FEFCFA',
                   border: '1.5px solid #EDE0E8',

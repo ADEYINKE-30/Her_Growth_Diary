@@ -1,15 +1,14 @@
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
-import type { NavProps } from '../types'
+import type { Page } from '../types'
 
-export default function Navbar({ currentPage }: NavProps) {
+export default function Navbar({ currentPage }: { currentPage: Page }) {
   const [menuOpen, setMenuOpen] = useState(false)
 
-  const links: { label: string; page: Parameters<NavProps['navigate']>[0]; path: string }[] = [
+  const links: { label: string; page: Page; path: string }[] = [
     { label: 'Home', page: 'home', path: '/' },
     { label: 'About', page: 'about', path: '/about' },
     { label: 'Diary', page: 'diary', path: '/diary' },
-    { label: 'Topics', page: 'home', path: '/' },
     { label: 'Resources', page: 'resources', path: '/resources' },
   ]
 

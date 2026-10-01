@@ -1,7 +1,6 @@
-import type { NavProps } from '../types'
 import { Link } from 'react-router-dom'
 
-export default function Footer({}: Pick<NavProps, 'navigate'>) {
+export default function Footer() {
   const links = [
     { label: 'Home', path: '/' },
     { label: 'About', path: '/about' },
@@ -21,7 +20,7 @@ export default function Footer({}: Pick<NavProps, 'navigate'>) {
           }}
         >
           {/* Brand */}
-          <div style={{ gridColumn: 'span 2' }}>
+          <div className="footer-brand" style={{ gridColumn: 'span 2' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
               <span style={{ fontSize: '1.2rem' }}>🌸</span>
               <span
@@ -175,6 +174,11 @@ export default function Footer({}: Pick<NavProps, 'navigate'>) {
           </p>
         </div>
       </div>
+      <style>{`
+        @media (max-width: 768px) {
+          .footer-brand { grid-column: span 1 !important; }
+        }
+      `}</style>
     </footer>
   )
 }

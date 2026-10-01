@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { CSSProperties } from 'react'
-import type { NavProps } from '../types'
+import type { FormEvent } from 'react'
+import type { Navigate } from '../types'
 import { diaryEntries, topics, journalPrompts } from '../data/content'
 
 const sectionInner: CSSProperties = {
@@ -34,7 +35,7 @@ function DiaryCard({
   navigate,
 }: {
   entry: (typeof diaryEntries)[0]
-  navigate: NavProps['navigate']
+  navigate: Navigate
 }) {
   const [hovered, setHovered] = useState(false)
 
@@ -45,7 +46,12 @@ function DiaryCard({
       onMouseLeave={() => setHovered(false)}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => e.key === 'Enter' && navigate('article', entry.id)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          navigate('article', entry.id)
+        }
+      }}
       style={{
         backgroundColor: '#FEFCFA',
         border: '1.5px solid #EDE0E8',
@@ -122,12 +128,12 @@ function DiaryCard({
   )
 }
 
-export default function Home({ navigate }: Pick<NavProps, 'navigate'>) {
+export default function Home({ navigate }: { navigate: Navigate }) {
   const [email, setEmail] = useState('')
   const [subscribed, setSubscribed] = useState(false)
   const [activePrompt, setActivePrompt] = useState(0)
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = (e: FormEvent) => {
     e.preventDefault()
     if (email.trim()) {
       setSubscribed(true)

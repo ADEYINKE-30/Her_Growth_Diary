@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import type { NavProps } from '../types'
+import type { Navigate } from '../types'
 import { diaryEntries } from '../data/content'
 
 const categories = ['All', 'Growth', 'Mindset', 'Confidence', 'Self-Love', 'Life & Growth', 'Personal Growth']
 
-export default function Diary({ navigate }: Pick<NavProps, 'navigate'>) {
+export default function Diary({ navigate }: { navigate: Navigate }) {
   const [activeCategory, setActiveCategory] = useState('All')
   const [search, setSearch] = useState('')
 
@@ -235,7 +235,7 @@ export default function Diary({ navigate }: Pick<NavProps, 'navigate'>) {
   )
 }
 
-function EntryCard({ entry, navigate }: { entry: (typeof diaryEntries)[0]; navigate: NavProps['navigate'] }) {
+function EntryCard({ entry, navigate }: { entry: (typeof diaryEntries)[0]; navigate: Navigate }) {
   const [hov, setHov] = useState(false)
   return (
     <article
@@ -244,7 +244,12 @@ function EntryCard({ entry, navigate }: { entry: (typeof diaryEntries)[0]; navig
       onMouseLeave={() => setHov(false)}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => e.key === 'Enter' && navigate('article', entry.id)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          navigate('article', entry.id)
+        }
+      }}
       style={{
         backgroundColor: '#FEFCFA',
         border: '1.5px solid #EDE0E8',
