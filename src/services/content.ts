@@ -1,4 +1,4 @@
-import type { DiaryEntry, ResourceCategory, Topic } from '../types'
+import type { AboutSection, Belief, DiaryEntry, GrowthStep, JournalPrompt, ResourceCategory, Topic } from '../types/content'
 
 export const diaryEntries: DiaryEntry[] = [
   {
@@ -153,7 +153,7 @@ export const topics: Topic[] = [
   },
 ]
 
-export const journalPrompts = [
+export const journalPrompts: JournalPrompt[] = [
   'What am I learning about myself lately?',
   'What am I proud of myself for?',
   'What am I currently struggling to accept?',
@@ -161,6 +161,36 @@ export const journalPrompts = [
   'What does the next version of me need?',
   'Where have I been holding myself back?',
 ]
+
+export const beliefs: Belief[] = [
+  { icon: '🌿', title: 'You are not behind.', body: 'Life is not a race with a fixed finish line. Your journey is unfolding at exactly the pace it needs to.' },
+  { icon: '💗', title: 'Small progress still counts.', body: 'Every tiny step you take — every difficult moment you walk through — is still movement. Still growth.' },
+  { icon: '✨', title: 'You are allowed to change.', body: 'Outgrowing who you were is not betrayal. It is the most honest thing you can do.' },
+  { icon: '🌸', title: 'Your story matters.', body: 'The quiet, unpolished, in-between version of you is just as worthy as the version you are becoming.' },
+]
+
+export const aboutSections: AboutSection[] = [
+  {
+    title: 'Why Her Growth Diary Exists',
+    body: 'Growing up can feel confusing, lonely, and overwhelming — even when it doesn\'t look that way from the outside. You can be surrounded by people and still feel deeply unseen. You can look perfectly fine and still be silently wondering if you\'re doing this right.\n\nHer Growth Diary was created to be the gentle voice that says: you are not alone in this, and you are not falling behind. It is a place where the in-between season of becoming is not something to be ashamed of — it is something to be witnessed, understood, and gently encouraged.',
+  },
+  {
+    title: 'Our Story',
+    body: 'This space was born out of the kind of conversations that don\'t always happen out loud — the ones you have with yourself in the quiet of the night, in the pages of a journal, in the space between who you were and who you are trying to become.\n\nHer Growth Diary exists to hold that space. To say the things you needed to hear. To reflect back to you the truth that your growth is valid, your pace is enough, and your story is worth telling.',
+  },
+]
+
+export const growthSteps: GrowthStep[] = [
+  { label: 'Discover', desc: 'Something stirs inside you.' },
+  { label: 'Learn', desc: 'You gather courage and begin.' },
+  { label: 'Struggle', desc: 'It gets hard. You feel lost.' },
+  { label: 'Reflect', desc: 'You pause and look inward.' },
+  { label: 'Grow', desc: 'Something quietly shifts.' },
+  { label: 'Become', desc: 'You are not who you were.' },
+]
+
+export const growthStepColors = ['#E8F5E9', '#FDF0F3', '#F4F1F8', '#FFF8F0', '#F0F7FF', '#FDF5FF']
+export const growthStepAccents = ['#66BB6A', '#E8A4B0', '#C4B5D4', '#FFB347', '#90CAF9', '#CE93D8']
 
 export const resources: ResourceCategory[] = [
   {

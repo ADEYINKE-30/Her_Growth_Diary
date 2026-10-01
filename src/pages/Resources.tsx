@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { resources } from '../data/content'
+import { resources } from '../services/content'
 
 export default function Resources() {
   const [activeTab, setActiveTab] = useState(0)

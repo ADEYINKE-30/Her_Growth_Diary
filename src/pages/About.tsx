@@ -1,24 +1,8 @@
-import type { Navigate } from '../types'
+import { useNavigate } from 'react-router-dom'
+import { aboutSections, beliefs } from '../services/content'
 
-export default function About({ navigate }: { navigate: Navigate }) {
-  const beliefs = [
-    { icon: '🌿', title: 'You are not behind.', body: 'Life is not a race with a fixed finish line. Your journey is unfolding at exactly the pace it needs to.' },
-    { icon: '💗', title: 'Small progress still counts.', body: 'Every tiny step you take — every difficult moment you walk through — is still movement. Still growth.' },
-    { icon: '✨', title: 'You are allowed to change.', body: 'Outgrowing who you were is not betrayal. It is the most honest thing you can do.' },
-    { icon: '🌸', title: 'Your story matters.', body: 'The quiet, unpolished, in-between version of you is just as worthy as the version you are becoming.' },
-  ]
-
-  const sections = [
-    {
-      title: 'Why Her Growth Diary Exists',
-      body: 'Growing up can feel confusing, lonely, and overwhelming — even when it doesn\'t look that way from the outside. You can be surrounded by people and still feel deeply unseen. You can look perfectly fine and still be silently wondering if you\'re doing this right.\n\nHer Growth Diary was created to be the gentle voice that says: you are not alone in this, and you are not falling behind. It is a place where the in-between season of becoming is not something to be ashamed of — it is something to be witnessed, understood, and gently encouraged.',
-    },
-    {
-      title: 'Our Story',
-      body: 'This space was born out of the kind of conversations that don\'t always happen out loud — the ones you have with yourself in the quiet of the night, in the pages of a journal, in the space between who you were and who you are trying to become.\n\nHer Growth Diary exists to hold that space. To say the things you needed to hear. To reflect back to you the truth that your growth is valid, your pace is enough, and your story is worth telling.',
-    },
-  ]
-
+export default function About() {
+  const navigate = useNavigate()
   return (
     <main>
       {/* Hero */}
@@ -95,7 +79,7 @@ export default function About({ navigate }: { navigate: Navigate }) {
               />
             </div>
             <div>
-              {sections.map((sec) => (
+              {aboutSections.map((sec) => (
                 <div key={sec.title} style={{ marginBottom: '2.5rem' }}>
                   <h2
                     className="font-serif"
@@ -237,7 +221,7 @@ export default function About({ navigate }: { navigate: Navigate }) {
           The diary is open. Come as you are.
         </p>
         <button
-          onClick={() => navigate('diary')}
+          onClick={() => navigate('/diary')}
           style={{
             backgroundColor: '#E8A4B0',
             color: '#FEFCFA',

@@ -1,15 +1,14 @@
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
-import type { Page } from '../types'
 
-export default function Navbar({ currentPage }: { currentPage: Page }) {
+export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
 
-  const links: { label: string; page: Page; path: string }[] = [
-    { label: 'Home', page: 'home', path: '/' },
-    { label: 'About', page: 'about', path: '/about' },
-    { label: 'Diary', page: 'diary', path: '/diary' },
-    { label: 'Resources', page: 'resources', path: '/resources' },
+  const links = [
+    { label: 'Home', path: '/' },
+    { label: 'About', path: '/about' },
+    { label: 'Diary', path: '/diary' },
+    { label: 'Resources', path: '/resources' },
   ]
 
   return (
@@ -63,23 +62,20 @@ export default function Navbar({ currentPage }: { currentPage: Page }) {
               <NavLink
                 key={link.label}
                 to={link.path}
-                style={{
+                end
+                className="hover-pink-text"
+                style={({ isActive }) => ({
                   background: 'none',
                   border: 'none',
                   cursor: 'pointer',
                   fontSize: '0.9rem',
-                  fontWeight: currentPage === link.page && link.page !== 'home' ? '600' : '400',
-                  color: currentPage === link.page && link.page !== 'home' ? '#E8A4B0' : '#5C4A5E',
+                  fontWeight: isActive && link.path !== '/' ? '600' : '400',
+                  color: isActive && link.path !== '/' ? '#E8A4B0' : '#5C4A5E',
                   letterSpacing: '0.01em',
                   padding: '0.25rem 0',
                   transition: 'color 0.2s ease',
                   position: 'relative',
-                }}
-                onMouseEnter={(e) => { (e.target as HTMLElement).style.color = '#E8A4B0' }}
-                onMouseLeave={(e) => {
-                  const isActive = currentPage === link.page && link.page !== 'home'
-                  ;(e.target as HTMLElement).style.color = isActive ? '#E8A4B0' : '#5C4A5E'
-                }}
+                })}
               >
                 {link.label}
               </NavLink>
@@ -90,6 +86,7 @@ export default function Navbar({ currentPage }: { currentPage: Page }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }} className="hidden-mobile">
             <button
               aria-label="Search"
+              className="hover-pink-text"
               style={{
                 background: 'none',
                 border: 'none',
@@ -100,8 +97,6 @@ export default function Navbar({ currentPage }: { currentPage: Page }) {
                 alignItems: 'center',
                 transition: 'color 0.2s',
               }}
-              onMouseEnter={(e) => { (e.target as HTMLElement).style.color = '#E8A4B0' }}
-              onMouseLeave={(e) => { (e.target as HTMLElement).style.color = '#5C4A5E' }}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -110,6 +105,7 @@ export default function Navbar({ currentPage }: { currentPage: Page }) {
 
             <Link
               to="/diary"
+              className="hover-pink-button"
               style={{
                 backgroundColor: '#E8A4B0',
                 color: '#FEFCFA',
@@ -121,14 +117,6 @@ export default function Navbar({ currentPage }: { currentPage: Page }) {
                 cursor: 'pointer',
                 letterSpacing: '0.01em',
                 transition: 'background-color 0.2s ease, transform 0.15s ease',
-              }}
-              onMouseEnter={(e) => {
-                ;(e.target as HTMLElement).style.backgroundColor = '#C05C74'
-                ;(e.target as HTMLElement).style.transform = 'translateY(-1px)'
-              }}
-              onMouseLeave={(e) => {
-                ;(e.target as HTMLElement).style.backgroundColor = '#E8A4B0'
-                ;(e.target as HTMLElement).style.transform = 'translateY(0)'
               }}
             >
               Start Reading

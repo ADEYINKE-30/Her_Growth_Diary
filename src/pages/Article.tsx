@@ -1,11 +1,12 @@
-import type { Navigate } from '../types'
-import { diaryEntries } from '../data/content'
+import { useNavigate, useParams } from 'react-router-dom'
+import { diaryEntries } from '../services/content'
+import CategoryBadge from '../components/common/CategoryBadge'
+import Card from '../components/common/Card'
 
-export default function Article({
-  navigate,
-  article,
-}: { navigate: Navigate; article: string | null }) {
-  const entry = diaryEntries.find((e) => e.id === article) ?? diaryEntries[0]
+export default function Article() {
+  const navigate = useNavigate()
+  const { articleId } = useParams()
+  const entry = diaryEntries.find((e) => e.id === articleId) ?? diaryEntries[0]
   const currentIndex = diaryEntries.findIndex((e) => e.id === entry.id)
   const prev = currentIndex > 0 ? diaryEntries[currentIndex - 1] : null
   const next = currentIndex < diaryEntries.length - 1 ? diaryEntries[currentIndex + 1] : null
@@ -18,14 +19,10 @@ export default function Article({
       {/* Breadcrumb */}
       <div style={{ padding: '1.25rem 2rem', borderBottom: '1px solid #EDE0E8', backgroundColor: '#FEFCFA' }}>
         <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'flex', gap: '0.5rem', alignItems: 'center', fontSize: '0.8rem', color: '#9B8A9E' }}>
-          <button onClick={() => navigate('home')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9B8A9E', padding: 0, transition: 'color 0.2s' }}
-            onMouseEnter={(e) => { (e.target as HTMLElement).style.color = '#E8A4B0' }}
-            onMouseLeave={(e) => { (e.target as HTMLElement).style.color = '#9B8A9E' }}
+          <button className="hover-pink-text" onClick={() => navigate('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9B8A9E', padding: 0, transition: 'color 0.2s' }}
           >Home</button>
           <span>›</span>
-          <button onClick={() => navigate('diary')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9B8A9E', padding: 0, transition: 'color 0.2s' }}
-            onMouseEnter={(e) => { (e.target as HTMLElement).style.color = '#E8A4B0' }}
-            onMouseLeave={(e) => { (e.target as HTMLElement).style.color = '#9B8A9E' }}
+          <button className="hover-pink-text" onClick={() => navigate('/diary')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9B8A9E', padding: 0, transition: 'color 0.2s' }}
           >Diary</button>
           <span>›</span>
           <span style={{ color: '#5C4A5E' }}>{entry.category}</span>
@@ -41,22 +38,9 @@ export default function Article({
         }}
       >
         <div style={{ maxWidth: '720px', margin: '0 auto' }}>
-          <span
-            style={{
-              display: 'inline-block',
-              backgroundColor: '#FDF0F3',
-              color: '#C05C74',
-              fontSize: '0.7rem',
-              fontWeight: 700,
-              letterSpacing: '0.09em',
-              textTransform: 'uppercase',
-              padding: '0.3rem 0.85rem',
-              borderRadius: '9999px',
-              marginBottom: '1.5rem',
-            }}
-          >
-            {entry.category}
-          </span>
+          <div style={{ marginBottom: '1.5rem' }}>
+            <CategoryBadge label={entry.category} tone="article" />
+          </div>
           <h1
             className="font-serif"
             style={{
@@ -208,7 +192,8 @@ export default function Article({
         >
           {prev ? (
             <button
-              onClick={() => navigate('article', prev.id)}
+              className="hover-pink-border"
+              onClick={() => navigate(`/diary/${prev.id}`)}
               style={{
                 backgroundColor: '#FEFCFA',
                 border: '1.5px solid #EDE0E8',
@@ -218,8 +203,6 @@ export default function Article({
                 cursor: 'pointer',
                 transition: 'border-color 0.2s',
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#E8A4B0' }}
-              onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#EDE0E8' }}
             >
               <p style={{ fontSize: '0.7rem', color: '#9B8A9E', textTransform: 'uppercase', letterSpacing: '0.07em', fontWeight: 600, margin: '0 0 0.5rem' }}>← Previous</p>
               <p className="font-serif" style={{ fontSize: '0.9rem', color: '#3D2A3F', margin: 0, lineHeight: 1.4 }}>{prev.title}</p>
@@ -227,7 +210,8 @@ export default function Article({
           ) : <div />}
           {next ? (
             <button
-              onClick={() => navigate('article', next.id)}
+              className="hover-pink-border"
+              onClick={() => navigate(`/diary/${next.id}`)}
               style={{
                 backgroundColor: '#FEFCFA',
                 border: '1.5px solid #EDE0E8',
@@ -237,8 +221,6 @@ export default function Article({
                 cursor: 'pointer',
                 transition: 'border-color 0.2s',
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#E8A4B0' }}
-              onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#EDE0E8' }}
             >
               <p style={{ fontSize: '0.7rem', color: '#9B8A9E', textTransform: 'uppercase', letterSpacing: '0.07em', fontWeight: 600, margin: '0 0 0.5rem' }}>Next →</p>
               <p className="font-serif" style={{ fontSize: '0.9rem', color: '#3D2A3F', margin: 0, lineHeight: 1.4 }}>{next.title}</p>
@@ -258,50 +240,7 @@ export default function Article({
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
             {related.map((r) => (
-              <div
-                key={r.id}
-                onClick={() => navigate('article', r.id)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault()
-                    navigate('article', r.id)
-                  }
-                }}
-                style={{
-                  backgroundColor: '#FEFCFA',
-                  border: '1.5px solid #EDE0E8',
-                  borderRadius: '1.25rem',
-                  overflow: 'hidden',
-                  cursor: 'pointer',
-                  transition: 'transform 0.25s, box-shadow 0.25s',
-                  display: 'flex',
-                  gap: '1rem',
-                  padding: '1.25rem',
-                  alignItems: 'center',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-3px)'
-                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(61, 42, 63, 0.08)'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'none'
-                  e.currentTarget.style.boxShadow = 'none'
-                }}
-              >
-                <div style={{ width: '80px', height: '80px', borderRadius: '0.75rem', overflow: 'hidden', flexShrink: 0, backgroundColor: '#F8DDE4' }}>
-                  <img src={r.image} alt={r.imageAlt} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-                </div>
-                <div>
-                  <span style={{ fontSize: '0.68rem', color: '#C05C74', fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase' }}>
-                    {r.category}
-                  </span>
-                  <p className="font-serif" style={{ fontSize: '0.9rem', fontWeight: 600, color: '#3D2A3F', margin: '0.25rem 0 0', lineHeight: 1.35 }}>
-                    {r.title}
-                  </p>
-                </div>
-              </div>
+              <Card key={r.id} entry={r} variant="related" />
             ))}
           </div>
         </div>

@@ -1,134 +1,12 @@
+import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
-import type { CSSProperties } from 'react'
 import type { FormEvent } from 'react'
-import type { Navigate } from '../types'
-import { diaryEntries, topics, journalPrompts } from '../data/content'
+import { diaryEntries, growthStepAccents, growthStepColors, growthSteps, journalPrompts, topics } from '../services/content'
+import Card from '../components/common/Card'
+import SectionContainer from '../components/common/SectionContainer'
 
-const sectionInner: CSSProperties = {
-  maxWidth: '1280px',
-  margin: '0 auto',
-  padding: '0 2rem',
-}
-
-function CategoryBadge({ label, color = '#EDE7F6', textColor = '#7A6A7C' }: { label: string; color?: string; textColor?: string }) {
-  return (
-    <span
-      style={{
-        display: 'inline-block',
-        backgroundColor: color,
-        color: textColor,
-        fontSize: '0.7rem',
-        fontWeight: 600,
-        letterSpacing: '0.08em',
-        textTransform: 'uppercase',
-        padding: '0.3rem 0.75rem',
-        borderRadius: '9999px',
-      }}
-    >
-      {label}
-    </span>
-  )
-}
-
-function DiaryCard({
-  entry,
-  navigate,
-}: {
-  entry: (typeof diaryEntries)[0]
-  navigate: Navigate
-}) {
-  const [hovered, setHovered] = useState(false)
-
-  return (
-    <article
-      onClick={() => navigate('article', entry.id)}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault()
-          navigate('article', entry.id)
-        }
-      }}
-      style={{
-        backgroundColor: '#FEFCFA',
-        border: '1.5px solid #EDE0E8',
-        borderRadius: '1.25rem',
-        overflow: 'hidden',
-        cursor: 'pointer',
-        transform: hovered ? 'translateY(-5px)' : 'translateY(0)',
-        boxShadow: hovered
-          ? '0 16px 40px rgba(61, 42, 63, 0.10)'
-          : '0 2px 12px rgba(61, 42, 63, 0.04)',
-        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
-      <div style={{ overflow: 'hidden', height: '220px', flexShrink: 0, backgroundColor: '#F8DDE4' }}>
-        <img
-          src={entry.image}
-          alt={entry.imageAlt}
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            transition: 'transform 0.5s ease',
-            transform: hovered ? 'scale(1.05)' : 'scale(1)',
-            display: 'block',
-          }}
-        />
-      </div>
-      <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1 }}>
-        <CategoryBadge label={entry.category} />
-        <h3
-          className="font-serif"
-          style={{
-            fontSize: '1.2rem',
-            fontWeight: 600,
-            color: '#3D2A3F',
-            lineHeight: 1.35,
-            margin: 0,
-          }}
-        >
-          {entry.title}
-        </h3>
-        <p style={{ fontSize: '0.875rem', color: '#7A6A7C', lineHeight: 1.65, margin: 0, flex: 1 }}>
-          {entry.excerpt}
-        </p>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            paddingTop: '0.75rem',
-            borderTop: '1px solid #EDE0E8',
-          }}
-        >
-          <span style={{ fontSize: '0.75rem', color: '#9B8A9E' }}>
-            {entry.date} · {entry.readTime}
-          </span>
-          <span
-            style={{
-              fontSize: '0.8rem',
-              color: '#E8A4B0',
-              fontWeight: 500,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.25rem',
-            }}
-          >
-            Read more →
-          </span>
-        </div>
-      </div>
-    </article>
-  )
-}
-
-export default function Home({ navigate }: { navigate: Navigate }) {
+export default function Home() {
+  const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [subscribed, setSubscribed] = useState(false)
   const [activePrompt, setActivePrompt] = useState(0)
@@ -140,15 +18,6 @@ export default function Home({ navigate }: { navigate: Navigate }) {
       setEmail('')
     }
   }
-
-  const growthSteps = [
-    { label: 'Discover', desc: 'Something stirs inside you.' },
-    { label: 'Learn', desc: 'You gather courage and begin.' },
-    { label: 'Struggle', desc: 'It gets hard. You feel lost.' },
-    { label: 'Reflect', desc: 'You pause and look inward.' },
-    { label: 'Grow', desc: 'Something quietly shifts.' },
-    { label: 'Become', desc: 'You are not who you were.' },
-  ]
 
   return (
     <main>
@@ -190,7 +59,7 @@ export default function Home({ navigate }: { navigate: Navigate }) {
           }}
         />
 
-        <div style={{ ...sectionInner, width: '100%' }}>
+        <SectionContainer style={{ width: '100%' }}>
           <div
             style={{
               display: 'grid',
@@ -250,7 +119,7 @@ export default function Home({ navigate }: { navigate: Navigate }) {
 
               <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                 <button
-                  onClick={() => navigate('diary')}
+                  onClick={() => navigate('/diary')}
                   style={{
                     backgroundColor: '#E8A4B0',
                     color: '#FEFCFA',
@@ -348,12 +217,12 @@ export default function Home({ navigate }: { navigate: Navigate }) {
               </div>
             </div>
           </div>
-        </div>
+        </SectionContainer>
       </section>
 
       {/* ── LITTLE REMINDER ── */}
       <section style={{ padding: '5rem 0', backgroundColor: '#FBF8F5' }}>
-        <div style={{ ...sectionInner, textAlign: 'center' }}>
+        <SectionContainer style={{ textAlign: 'center' }}>
           <div style={{ fontSize: '2rem', marginBottom: '1.5rem' }}>🌿</div>
           <h2
             className="font-serif"
@@ -409,12 +278,12 @@ export default function Home({ navigate }: { navigate: Navigate }) {
               <span style={{ color: '#C4B5D4' }}>You are allowed to become someone new.</span>
             </p>
           </div>
-        </div>
+        </SectionContainer>
       </section>
 
       {/* ── FROM HER DIARY ── */}
       <section style={{ padding: '5rem 0', backgroundColor: '#FDF0F3' }}>
-        <div style={sectionInner}>
+        <SectionContainer>
           <div style={{ marginBottom: '3rem' }}>
             <h2
               className="font-serif"
@@ -441,13 +310,13 @@ export default function Home({ navigate }: { navigate: Navigate }) {
             }}
           >
             {diaryEntries.map((entry) => (
-              <DiaryCard key={entry.id} entry={entry} navigate={navigate} />
+              <Card key={entry.id} entry={entry} variant="home" />
             ))}
           </div>
 
           <div style={{ textAlign: 'center', marginTop: '3rem' }}>
             <button
-              onClick={() => navigate('diary')}
+              onClick={() => navigate('/diary')}
               style={{
                 backgroundColor: 'transparent',
                 color: '#3D2A3F',
@@ -471,12 +340,12 @@ export default function Home({ navigate }: { navigate: Navigate }) {
               Read all entries →
             </button>
           </div>
-        </div>
+        </SectionContainer>
       </section>
 
       {/* ── TOPICS ── */}
       <section id="topics" style={{ padding: '5rem 0', backgroundColor: '#FBF8F5' }}>
-        <div style={sectionInner}>
+        <SectionContainer>
           <div style={{ marginBottom: '3rem', textAlign: 'center' }}>
             <h2
               className="font-serif"
@@ -503,7 +372,7 @@ export default function Home({ navigate }: { navigate: Navigate }) {
               <TopicCard key={topic.name} topic={topic} />
             ))}
           </div>
-        </div>
+        </SectionContainer>
       </section>
 
       {/* ── DEAR GIRL ── */}
@@ -524,7 +393,7 @@ export default function Home({ navigate }: { navigate: Navigate }) {
             pointerEvents: 'none',
           }}
         />
-        <div style={{ ...sectionInner, position: 'relative' }}>
+        <SectionContainer style={{ position: 'relative' }}>
           <div style={{ maxWidth: '680px', margin: '0 auto' }}>
             <p
               style={{
@@ -587,7 +456,7 @@ export default function Home({ navigate }: { navigate: Navigate }) {
             </div>
 
             <button
-              onClick={() => navigate('diary')}
+              onClick={() => navigate('/diary')}
               style={{
                 backgroundColor: 'transparent',
                 color: '#EDE0E8',
@@ -612,12 +481,12 @@ export default function Home({ navigate }: { navigate: Navigate }) {
               Read more letters →
             </button>
           </div>
-        </div>
+        </SectionContainer>
       </section>
 
       {/* ── GROWTH JOURNEY ── */}
       <section style={{ padding: '5rem 0', backgroundColor: '#FEFCFA' }}>
-        <div style={sectionInner}>
+        <SectionContainer>
           <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
             <h2
               className="font-serif"
@@ -649,12 +518,12 @@ export default function Home({ navigate }: { navigate: Navigate }) {
               <GrowthStep key={step.label} step={step} index={i} total={growthSteps.length} />
             ))}
           </div>
-        </div>
+        </SectionContainer>
       </section>
 
       {/* ── JOURNAL PROMPTS ── */}
       <section style={{ padding: '5rem 0', backgroundColor: '#F4F1F8' }}>
-        <div style={sectionInner}>
+        <SectionContainer>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'start' }} className="prompts-grid">
             <div>
               <p
@@ -747,12 +616,12 @@ export default function Home({ navigate }: { navigate: Navigate }) {
               ))}
             </div>
           </div>
-        </div>
+        </SectionContainer>
       </section>
 
       {/* ── HERO IMAGE ROW ── */}
       <section style={{ padding: '5rem 0', backgroundColor: '#FBF8F5' }}>
-        <div style={sectionInner}>
+        <SectionContainer>
           <div style={{ display: 'flex', gap: '1.5rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
             {[
               {
@@ -791,12 +660,12 @@ export default function Home({ navigate }: { navigate: Navigate }) {
               </div>
             ))}
           </div>
-        </div>
+        </SectionContainer>
       </section>
 
       {/* ── NEWSLETTER ── */}
       <section style={{ padding: '5rem 0', backgroundColor: '#FDF0F3' }}>
-        <div style={{ ...sectionInner, textAlign: 'center' }}>
+        <SectionContainer style={{ textAlign: 'center' }}>
           <div
             style={{
               maxWidth: '540px',
@@ -880,7 +749,7 @@ export default function Home({ navigate }: { navigate: Navigate }) {
               </form>
             )}
           </div>
-        </div>
+        </SectionContainer>
       </section>
 
       <style>{`
@@ -934,8 +803,8 @@ function GrowthStep({
   index: number
   total: number
 }) {
-  const colors = ['#E8F5E9', '#FDF0F3', '#F4F1F8', '#FFF8F0', '#F0F7FF', '#FDF5FF']
-  const accents = ['#66BB6A', '#E8A4B0', '#C4B5D4', '#FFB347', '#90CAF9', '#CE93D8']
+  const colors = growthStepColors
+  const accents = growthStepAccents
 
   return (
     <div

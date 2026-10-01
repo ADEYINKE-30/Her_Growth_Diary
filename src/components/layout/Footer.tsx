@@ -39,6 +39,7 @@ export default function Footer() {
                 <button
                   key={social}
                   aria-label={social}
+                  className="social-hover"
                   style={{
                     width: '38px',
                     height: '38px',
@@ -54,14 +55,6 @@ export default function Footer() {
                     fontWeight: 600,
                     letterSpacing: '0.02em',
                     transition: 'border-color 0.2s, color 0.2s',
-                  }}
-                  onMouseEnter={(e) => {
-                    ;(e.currentTarget as HTMLElement).style.borderColor = '#E8A4B0'
-                    ;(e.currentTarget as HTMLElement).style.color = '#E8A4B0'
-                  }}
-                  onMouseLeave={(e) => {
-                    ;(e.currentTarget as HTMLElement).style.borderColor = 'rgba(237, 224, 232, 0.3)'
-                    ;(e.currentTarget as HTMLElement).style.color = '#D6CADB'
                   }}
                 >
                   {social === 'Instagram' ? 'IG' : social === 'Pinterest' ? 'PT' : 'YT'}
@@ -83,6 +76,7 @@ export default function Footer() {
                 <li key={link.label}>
                   <Link
                     to={link.path}
+                    className="hover-pink-text"
                     style={{
                       background: 'none',
                       border: 'none',
@@ -92,8 +86,6 @@ export default function Footer() {
                       padding: 0,
                       transition: 'color 0.2s',
                     }}
-                    onMouseEnter={(e) => { (e.target as HTMLElement).style.color = '#E8A4B0' }}
-                    onMouseLeave={(e) => { (e.target as HTMLElement).style.color = '#B89DB5' }}
                   >
                     {link.label}
                   </Link>
@@ -130,6 +122,7 @@ export default function Footer() {
                 aria-label="Email address"
               />
               <button
+                className="hover-pink-bg"
                 style={{
                   backgroundColor: '#E8A4B0',
                   color: '#FEFCFA',
@@ -142,8 +135,6 @@ export default function Footer() {
                   whiteSpace: 'nowrap',
                   transition: 'background-color 0.2s',
                 }}
-                onMouseEnter={(e) => { (e.target as HTMLElement).style.backgroundColor = '#C05C74' }}
-                onMouseLeave={(e) => { (e.target as HTMLElement).style.backgroundColor = '#E8A4B0' }}
               >
                 Join
               </button>
