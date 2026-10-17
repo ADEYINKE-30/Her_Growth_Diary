@@ -23,6 +23,7 @@ export type JournalPrompt = string
 export interface ResourceItem {
   title: string
   description: string
+  url?: string
 }
 
 export interface ResourceCategory {

@@ -1,7 +1,9 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import type { FormEvent } from 'react'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { diaryEntries, growthStepAccents, growthStepColors, growthSteps, journalPrompts, topics } from '../services/content'
+import { getPublicDiary, getPublicPrompts, getPublicTopics, subscribeToNewsletter } from '../services/public'
 import Card from '../components/common/Card'
 import SectionContainer from '../components/common/SectionContainer'
 
@@ -10,14 +12,25 @@ export default function Home() {
   const [email, setEmail] = useState('')
   const [subscribed, setSubscribed] = useState(false)
   const [activePrompt, setActivePrompt] = useState(0)
+  const diaryQuery = useQuery({ queryKey: ['public-diary'], queryFn: getPublicDiary, initialData: diaryEntries })
+  const topicsQuery = useQuery({ queryKey: ['public-topics'], queryFn: getPublicTopics, initialData: topics })
+  const promptsQuery = useQuery({ queryKey: ['public-prompts'], queryFn: getPublicPrompts, initialData: journalPrompts })
+  const subscribeMutation = useMutation({
+    mutationFn: subscribeToNewsletter,
+    onSuccess: () => {
+      setSubscribed(true)
+      setEmail('')
+    },
+  })
 
   const handleSubscribe = (e: FormEvent) => {
     e.preventDefault()
-    if (email.trim()) {
-      setSubscribed(true)
-      setEmail('')
-    }
+    if (email.trim()) subscribeMutation.mutate(email)
   }
+
+  const homeDiaryEntries = diaryQuery.data
+  const homeTopics = topicsQuery.data
+  const homeJournalPrompts = promptsQuery.data
 
   return (
     <main>
@@ -309,7 +322,7 @@ export default function Home() {
               gap: '1.5rem',
             }}
           >
-            {diaryEntries.map((entry) => (
+            {homeDiaryEntries.map((entry) => (
               <Card key={entry.id} entry={entry} variant="home" />
             ))}
           </div>
@@ -368,7 +381,7 @@ export default function Home() {
               gap: '1.25rem',
             }}
           >
-            {topics.map((topic) => (
+            {homeTopics.map((topic) => (
               <TopicCard key={topic.name} topic={topic} />
             ))}
           </div>
@@ -580,7 +593,7 @@ export default function Home() {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
-              {journalPrompts.map((prompt, i) => (
+              {homeJournalPrompts.map((prompt, i) => (
                 <button
                   key={i}
                   onClick={() => setActivePrompt(i)}
@@ -721,6 +734,7 @@ export default function Home() {
                 />
                 <button
                   type="submit"
+                  disabled={subscribeMutation.isPending}
                   style={{
                     backgroundColor: '#E8A4B0',
                     color: '#FEFCFA',
@@ -741,8 +755,13 @@ export default function Home() {
                     e.currentTarget.style.transform = 'translateY(0)'
                   }}
                 >
-                  Join the Diary
+                  {subscribeMutation.isPending ? 'Joining…' : 'Join the Diary'}
                 </button>
+                {subscribeMutation.isError && (
+                  <p style={{ fontSize: '0.75rem', color: '#C05C74', margin: 0 }}>
+                    {subscribeMutation.error instanceof Error ? subscribeMutation.error.message : 'Unable to subscribe right now.'}
+                  </p>
+                )}
                 <p style={{ fontSize: '0.75rem', color: '#9B8A9E', margin: 0 }}>
                   No spam. Unsubscribe anytime.
                 </p>

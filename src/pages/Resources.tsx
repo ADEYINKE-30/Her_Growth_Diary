@@ -1,8 +1,26 @@
 import { useState } from 'react'
-import { resources } from '../services/content'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { getPublicResources, subscribeToNewsletter } from '../services/public'
+import { resources as fallbackResources } from '../services/content'
 
 export default function Resources() {
   const [activeTab, setActiveTab] = useState(0)
+  const [email, setEmail] = useState('')
+  const [subscribed, setSubscribed] = useState(false)
+  const resourcesQuery = useQuery({
+    queryKey: ['public-resources'],
+    queryFn: getPublicResources,
+    initialData: fallbackResources,
+  })
+  const subscribeMutation = useMutation({
+    mutationFn: subscribeToNewsletter,
+    onSuccess: () => {
+      setSubscribed(true)
+      setEmail('')
+    },
+  })
+  const resources = resourcesQuery.data
+  const selectedIndex = Math.min(activeTab, Math.max(resources.length - 1, 0))
 
   return (
     <main style={{ backgroundColor: '#FBF8F5', minHeight: '100vh' }}>
@@ -91,8 +109,8 @@ export default function Resources() {
       <section style={{ padding: '4rem 2rem' }}>
         <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' }}>
-            {resources[activeTab].items.map((item, i) => (
-              <ResourceCard key={i} {...item} emoji={resources[activeTab].emoji} />
+            {resources[selectedIndex]?.items.map((item, i) => (
+                <ResourceCard key={i} {...item} emoji={resources[selectedIndex].emoji} />
             ))}
           </div>
         </div>
@@ -170,10 +188,24 @@ export default function Resources() {
           <p style={{ fontSize: '0.925rem', color: '#B89DB5', lineHeight: 1.7, marginBottom: '2rem' }}>
             Join the diary to receive new prompts and guides directly to your inbox.
           </p>
-          <div style={{ display: 'flex', gap: '0.75rem', maxWidth: '360px', margin: '0 auto' }}>
+          {subscribed ? (
+            <p className="font-serif" style={{ color: '#FEFCFA', fontStyle: 'italic' }}>
+              Welcome to the diary. 🌸
+            </p>
+          ) : (
+          <form
+            onSubmit={(event) => {
+              event.preventDefault()
+              subscribeMutation.mutate(email)
+            }}
+            style={{ display: 'flex', gap: '0.75rem', maxWidth: '360px', margin: '0 auto' }}
+          >
             <input
               type="email"
               placeholder="Your email"
+              required
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
               style={{
                 background: 'rgba(255,255,255,0.1)',
                 border: '1.5px solid rgba(237, 224, 232, 0.25)',
@@ -183,6 +215,8 @@ export default function Resources() {
               aria-label="Email for newsletter"
             />
             <button
+              type="submit"
+              disabled={subscribeMutation.isPending}
               style={{
                 backgroundColor: '#E8A4B0',
                 color: '#FEFCFA',
@@ -198,16 +232,22 @@ export default function Resources() {
               onMouseEnter={(e) => { (e.target as HTMLElement).style.backgroundColor = '#C05C74' }}
               onMouseLeave={(e) => { (e.target as HTMLElement).style.backgroundColor = '#E8A4B0' }}
             >
-              Join
+              {subscribeMutation.isPending ? 'Joining…' : 'Join'}
             </button>
-          </div>
+          </form>
+          )}
+          {subscribeMutation.isError && (
+            <p style={{ color: '#F8DDE4', fontSize: '0.8rem', marginTop: '0.75rem' }}>
+              {subscribeMutation.error instanceof Error ? subscribeMutation.error.message : 'Unable to subscribe right now.'}
+            </p>
+          )}
         </div>
       </section>
     </main>
   )
 }
 
-function ResourceCard({ title, description, emoji }: { title: string; description: string; emoji: string }) {
+function ResourceCard({ title, description, emoji, url }: { title: string; description: string; emoji: string; url?: string }) {
   const [hov, setHov] = useState(false)
   return (
     <div
@@ -244,20 +284,23 @@ function ResourceCard({ title, description, emoji }: { title: string; descriptio
       <p style={{ fontSize: '0.875rem', color: '#5C4A5E', lineHeight: 1.65, margin: '0 0 1.25rem' }}>
         {description}
       </p>
-      <button
+      <a
+        href={url ?? '#'}
+        target={url ? '_blank' : undefined}
+        rel={url ? 'noreferrer' : undefined}
+        onClick={(event) => { if (!url) event.preventDefault() }}
         style={{
-          background: 'none',
-          border: 'none',
+          display: 'inline-block',
           color: '#E8A4B0',
           fontSize: '0.825rem',
           fontWeight: 600,
-          cursor: 'pointer',
+          cursor: url ? 'pointer' : 'default',
           padding: 0,
           letterSpacing: '0.02em',
         }}
       >
         Explore →
-      </button>
+      </a>
     </div>
   )
 }

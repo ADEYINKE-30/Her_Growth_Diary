@@ -13,6 +13,12 @@ export default defineConfig({
   server: {
     port: parseInt(process.env.PORT || '8443'),
     strictPort: true,
+    proxy: {
+      '/api': {
+        target: process.env.API_PROXY_TARGET || 'http://localhost:5000',
+        changeOrigin: true,
+      },
+    },
   },
   preview: {
     port: parseInt(process.env.PORT || '8443'),

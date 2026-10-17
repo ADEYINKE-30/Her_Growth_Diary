@@ -3,11 +3,14 @@ dist/
 build/
 .cache/
 .env*
+!.env.example
 .vite/
 vite.config.*.timestamp-*
 *.tsbuildinfo
 *-debug.log*
 logs/
+playwright-report/
+test-results/
 *.log
 .claude-replay.*
 .tmp-*

@@ -1,16 +1,36 @@
 import { useNavigate, useParams } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
 import { diaryEntries } from '../services/content'
+import { getPublicDiary } from '../services/public'
 import CategoryBadge from '../components/common/CategoryBadge'
 import Card from '../components/common/Card'
 
 export default function Article() {
   const navigate = useNavigate()
   const { articleId } = useParams()
-  const entry = diaryEntries.find((e) => e.id === articleId) ?? diaryEntries[0]
-  const currentIndex = diaryEntries.findIndex((e) => e.id === entry.id)
-  const prev = currentIndex > 0 ? diaryEntries[currentIndex - 1] : null
-  const next = currentIndex < diaryEntries.length - 1 ? diaryEntries[currentIndex + 1] : null
-  const related = diaryEntries.filter((e) => e.id !== entry.id).slice(0, 2)
+  const diaryQuery = useQuery({ queryKey: ['public-diary'], queryFn: getPublicDiary, initialData: diaryEntries })
+  const entries = diaryQuery.data
+  const entry = entries.find((e) => e.id === articleId)
+
+  if (diaryQuery.isLoading) {
+    return <main style={{ padding: '6rem 2rem', textAlign: 'center', color: '#7A6A7C' }}>Loading entry…</main>
+  }
+
+  if (!entry) {
+    return (
+      <main style={{ padding: '6rem 2rem', textAlign: 'center', color: '#7A6A7C' }}>
+        <h1 className="font-serif" style={{ color: '#3D2A3F' }}>Entry not found</h1>
+        <button type="button" onClick={() => navigate('/diary')} style={{ color: '#C05C74', background: 'none', border: 'none', cursor: 'pointer' }}>
+          Return to the diary
+        </button>
+      </main>
+    )
+  }
+
+  const currentIndex = entries.findIndex((e) => e.id === entry.id)
+  const prev = currentIndex > 0 ? entries[currentIndex - 1] : null
+  const next = currentIndex < entries.length - 1 ? entries[currentIndex + 1] : null
+  const related = entries.filter((e) => e.id !== entry.id).slice(0, 2)
 
   const paragraphs = entry.content.trim().split('\n\n').filter(Boolean)
 

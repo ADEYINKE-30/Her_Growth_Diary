@@ -1,18 +1,22 @@
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
-import { diaryEntries } from "../services/content"
+import { useQuery } from "@tanstack/react-query"
 import Card from "../components/common/Card"
 import { filterDiaryEntries, getDiaryCategories } from "../features/diary/selectors"
 
-const categories = getDiaryCategories(diaryEntries)
+import { getDiaryEntries } from "../services/diary"
 
 export default function Diary() {
   const navigate = useNavigate()
   const [activeCategory, setActiveCategory] = useState("All")
   const [search, setSearch] = useState("")
+  const { data: diaryEntries = [], isLoading, isError, refetch } = useQuery({
+    queryKey: ["diary"],
+    queryFn: getDiaryEntries,
+  })
 
+  const categories = getDiaryCategories(diaryEntries)
   const filtered = filterDiaryEntries(diaryEntries, activeCategory, search)
-
   const featured = diaryEntries[0]
 
   return (
@@ -84,7 +88,22 @@ export default function Diary() {
           >
             Featured Entry
           </p>
-          <div
+          {isLoading ? (
+            <p style={{ color: "#7A6A7C", lineHeight: 1.7 }}>Loading the latest entries…</p>
+          ) : isError || !featured ? (
+            <p style={{ color: "#7A6A7C", lineHeight: 1.7 }}>
+              {isError ? "We couldn’t load the diary right now. " : "No diary entries are available yet."}
+              {isError && (
+                <button
+                  type="button"
+                  onClick={() => refetch()}
+                  style={{ color: "#C05C74", background: "none", border: "none", cursor: "pointer", padding: 0 }}
+                >
+                  Try again.
+                </button>
+              )}
+            </p>
+          ) : <div
             onClick={() => navigate(`/diary/${featured.id}`)}
             role="button"
             tabIndex={0}
@@ -189,12 +208,12 @@ export default function Diary() {
                 }}
               />
             </div>
-          </div>
+          </div>}
         </div>
       </section>
 
       {/* Filter + Search */}
-      <section
+      {!isLoading && !isError && <section
         style={{
           padding: "2.5rem 2rem",
           backgroundColor: "#FBF8F5",
@@ -278,12 +297,16 @@ export default function Diary() {
             </svg>
           </div>
         </div>
-      </section>
+      </section>}
 
       {/* Entry grid */}
       <section style={{ padding: "3rem 2rem 5rem" }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
-          {filtered.length === 0 ? (
+          {isLoading ? (
+            <p style={{ textAlign: "center", padding: "4rem", color: "#9B8A9E" }}>
+              Loading entries…
+            </p>
+          ) : isError ? null : filtered.length === 0 ? (
             <div
               style={{ textAlign: "center", padding: "4rem", color: "#9B8A9E" }}
             >
