@@ -1,6 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { diaryEntries } from '../services/content'
 import { getPublicDiary } from '../services/public'
 import CategoryBadge from '../components/common/CategoryBadge'
 import Card from '../components/common/Card'
@@ -8,12 +7,16 @@ import Card from '../components/common/Card'
 export default function Article() {
   const navigate = useNavigate()
   const { articleId } = useParams()
-  const diaryQuery = useQuery({ queryKey: ['public-diary'], queryFn: getPublicDiary, initialData: diaryEntries })
-  const entries = diaryQuery.data
+  const diaryQuery = useQuery({ queryKey: ['public-diary'], queryFn: getPublicDiary })
+  const entries = diaryQuery.data ?? []
   const entry = entries.find((e) => e.id === articleId)
 
   if (diaryQuery.isLoading) {
     return <main style={{ padding: '6rem 2rem', textAlign: 'center', color: '#7A6A7C' }}>Loading entry…</main>
+  }
+
+  if (diaryQuery.isError) {
+    return <main style={{ padding: '6rem 2rem', textAlign: 'center', color: '#7A6A7C' }}>We couldn’t load this entry right now.</main>
   }
 
   if (!entry) {

@@ -121,6 +121,16 @@ export default function Navbar() {
             >
               Start Reading
             </Link>
+            <Link
+              to="/admin/login"
+              style={{
+                color: '#7A6A7C',
+                fontSize: '0.8rem',
+                textDecoration: 'none',
+              }}
+            >
+              Admin
+            </Link>
           </div>
 
           {/* Mobile menu button */}
@@ -197,6 +207,17 @@ export default function Navbar() {
               }}
             >
               Start Reading
+            </Link>
+            <Link
+              to="/admin/login"
+              onClick={() => setMenuOpen(false)}
+              style={{
+                color: '#7A6A7C',
+                fontSize: '0.9rem',
+                padding: '0.75rem 0',
+              }}
+            >
+              Admin sign in
             </Link>
           </div>
         )}

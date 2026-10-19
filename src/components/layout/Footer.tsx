@@ -91,6 +91,15 @@ export default function Footer() {
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link
+                  to="/admin/login"
+                  className="hover-pink-text"
+                  style={{ color: '#B89DB5', fontSize: '0.875rem' }}
+                >
+                  Admin sign in
+                </Link>
+              </li>
             </ul>
           </div>
 

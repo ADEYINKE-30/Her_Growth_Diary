@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { getPublicResources, subscribeToNewsletter } from '../services/public'
-import { resources as fallbackResources } from '../services/content'
 
 export default function Resources() {
   const [activeTab, setActiveTab] = useState(0)
@@ -10,7 +9,6 @@ export default function Resources() {
   const resourcesQuery = useQuery({
     queryKey: ['public-resources'],
     queryFn: getPublicResources,
-    initialData: fallbackResources,
   })
   const subscribeMutation = useMutation({
     mutationFn: subscribeToNewsletter,
@@ -19,7 +17,7 @@ export default function Resources() {
       setEmail('')
     },
   })
-  const resources = resourcesQuery.data
+  const resources = resourcesQuery.data ?? []
   const selectedIndex = Math.min(activeTab, Math.max(resources.length - 1, 0))
 
   return (
@@ -78,7 +76,15 @@ export default function Resources() {
         }}
       >
         <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 2rem', display: 'flex', gap: '0', overflowX: 'auto' }}>
-          {resources.map((cat, i) => (
+          {resourcesQuery.isLoading ? (
+            <p style={{ color: '#7A6A7C', padding: '2rem 0' }}>Loading resources…</p>
+          ) : resourcesQuery.isError ? (
+            <p style={{ color: '#7A6A7C', padding: '2rem 0' }}>
+              We couldn’t load the resources right now. Please try again shortly.
+            </p>
+          ) : resources.length === 0 ? (
+            <p style={{ color: '#7A6A7C', padding: '2rem 0' }}>New resources are coming soon.</p>
+          ) : resources.map((cat, i) => (
             <button
               key={cat.category}
               onClick={() => setActiveTab(i)}

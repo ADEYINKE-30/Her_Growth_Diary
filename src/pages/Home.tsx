@@ -2,19 +2,20 @@ import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { diaryEntries, growthStepAccents, growthStepColors, growthSteps, journalPrompts, topics } from '../services/content'
+import { growthStepAccents, growthStepColors, growthSteps } from '../services/content'
 import { getPublicDiary, getPublicPrompts, getPublicTopics, subscribeToNewsletter } from '../services/public'
 import Card from '../components/common/Card'
 import SectionContainer from '../components/common/SectionContainer'
+import type { Topic } from '../types/content'
 
 export default function Home() {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [subscribed, setSubscribed] = useState(false)
   const [activePrompt, setActivePrompt] = useState(0)
-  const diaryQuery = useQuery({ queryKey: ['public-diary'], queryFn: getPublicDiary, initialData: diaryEntries })
-  const topicsQuery = useQuery({ queryKey: ['public-topics'], queryFn: getPublicTopics, initialData: topics })
-  const promptsQuery = useQuery({ queryKey: ['public-prompts'], queryFn: getPublicPrompts, initialData: journalPrompts })
+  const diaryQuery = useQuery({ queryKey: ['public-diary'], queryFn: getPublicDiary })
+  const topicsQuery = useQuery({ queryKey: ['public-topics'], queryFn: getPublicTopics })
+  const promptsQuery = useQuery({ queryKey: ['public-prompts'], queryFn: getPublicPrompts })
   const subscribeMutation = useMutation({
     mutationFn: subscribeToNewsletter,
     onSuccess: () => {
@@ -28,9 +29,9 @@ export default function Home() {
     if (email.trim()) subscribeMutation.mutate(email)
   }
 
-  const homeDiaryEntries = diaryQuery.data
-  const homeTopics = topicsQuery.data
-  const homeJournalPrompts = promptsQuery.data
+  const homeDiaryEntries = diaryQuery.data ?? []
+  const homeTopics = topicsQuery.data ?? []
+  const homeJournalPrompts = promptsQuery.data ?? []
 
   return (
     <main>
@@ -782,7 +783,7 @@ export default function Home() {
   )
 }
 
-function TopicCard({ topic }: { topic: (typeof topics)[0] }) {
+function TopicCard({ topic }: { topic: Topic }) {
   const [hovered, setHovered] = useState(false)
   return (
     <div
